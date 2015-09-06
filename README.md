@@ -14,4 +14,17 @@ There is a large number of features that either have missing values or need clea
 
 There are also features that are associated only with a specific type of component (e.g. adaptors) and therefore can only describe tube assemblies that have this type of component. For tube assemblies that don't have this type of component, I filled in the gaps with zeros for numerical features and with an additional label for categorical features. 
 
-Categorical features were transformed into numerical format either by replacing each label with a number (**label encoding**) or with **one-hot encoding**. Specifically for specs and component_ids I used one-hot encoding, and for all others label encoding. The label encoding was also combined with hashing where labels with low counts were all represented with the same value.
+Categorical features were transformed into numerical format either by replacing each label with a number (**label encoding**) or with **one-hot encoding**. Specifically for specs and component_ids, I used one-hot encoding, and for all others, label encoding. Both label and one-hot encoding were combined with hashing, i.e. for label encoding labels with low counts were all represented with the same numerical value, and for one-hot encoding rare features were all combined together as one feature.
+
+### **Feature engineering**
+
+I created the following features:
+
+From the quote_date: **year**, **month**, **week**, **day**, **day of year**, **day of week**
+
+From the specs: **total number of specs in a tube**, and **total_specs_score**. The total_specs_score is the sum of all individual specs labels (encoded as numbers) in a tube. The labels are carefully chosen to avoid collisions (e.g. tubes with N specs will always have higher total_specs_score than tubes with N-1 specs).  
+
+From Bill_of_materials: **total number of all components in a tube**, **total number of components for each component type**, **and total_comp_score** (defined similarly to total_specs_score but here the sum is weighted with the number of times that each component is used in the tube). 
+
+From Comp_[type]: I used all the features for each one of the 11 different component types. However, the value of each feature was modified to take into account that one tube may have multiple components of the same type. For example if one tube has 2 adaptors with component_id='C-1230' and 4 more adaptors with component_id='C-1695', the weight feature of the adaptor type will be a **weighted sum** of the 'C-1230' and 'C-1695' components with the weights of the sum equal to 2 and 4 respectively.
+
