@@ -16,6 +16,8 @@ There are also features that are associated only with a specific type of compone
 
 Categorical features were transformed into numerical format either by replacing each label with a number (**label encoding**) or with **one-hot encoding**. Specifically for specs and component_ids, I used one-hot encoding, and for all others, label encoding. Both label and one-hot encoding were combined with hashing, i.e. for label encoding labels with low counts were all represented with the same numerical value, and for one-hot encoding rare features were all combined together as one feature.
 
+Last, I transformed the response variable (i.e. the price of the tube assemblies) by taking the 1/20 power. Other values for **power transformation** as well as **log transformation** were also explored but the 1/20 power gave the lowest Cross-Validation (CV) error.
+
 ### **Feature engineering**
 
 I created the following features:
@@ -28,3 +30,16 @@ From Bill_of_materials: **total number of all components in a tube**, **total nu
 
 From Comp_[type]: I used all the features for each one of the 11 different component types. However, the value of each feature was modified to take into account that one tube may have multiple components of the same type. For example if one tube has 2 adaptors with component_id='C-1230' and 4 more adaptors with component_id='C-1695', the weight feature of the adaptor type will be a **weighted sum** of the 'C-1230' and 'C-1695' components with the weights of the sum equal to 2 and 4 respectively.
 
+### **Feature selection**
+
+There are totally 301 features in the dataset after the pre-processing of the data. The feature selection is performed in 4 steps:
+
+1. Using the transformed cost, I applied the f_regression function of the Scikit-learn feature_selection module on the data. The f_regression function computes first the cross correlation between a feature and the response variable and then computes the **F score** and the corresponding p-value. At the end of this step, each feature is associated with an F score and a p-value.
+
+2. For every pair of features that have pearson correlation larger than 0.95, I eliminated the feature of the pair that had lower F score (computed in step 1). At the end of this step, about half of the features were eliminated.
+
+3. I applied either a **Random Forest Regressor** (with 2000 trees) or a **Gradient Boosting Regressor** (with n_estimators = 4000 and learning_rate = 0.02) to rank the remaining features. Some of my models used the RF method and some the GB method.
+
+4. The exact number of features used in the model was determined with CV. My best single model used the top 72 features (ranked with Random Forest Regressor).
+
+One interesting observation is that models that used the GB method for feature ranking achieved the lowest CV error with only about 40 features while models that used the RF method needed at least 60-80 features for best CV score. It should be probably expected that using the same method both for feature selection and modeling is a better option than using different methods.
