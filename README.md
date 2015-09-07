@@ -36,10 +36,19 @@ There are totally 301 features in the dataset after the pre-processing of the da
 
 1. Using the transformed cost, I applied the f_regression function of the Scikit-learn feature_selection module on the data. The f_regression function computes first the cross correlation between a feature and the response variable and then computes the **F score** and the corresponding p-value. At the end of this step, each feature is associated with an F score and a p-value.
 
-2. For every pair of features that have pearson correlation larger than 0.95, I eliminated the feature of the pair that had lower F score (computed in step 1). At the end of this step, about half of the features were eliminated.
+2. For every pair of features that have **pearson correlation** larger than 0.95, I eliminated the feature of the pair that had lower F score (computed in step 1). At the end of this step, about half of the features were eliminated.
 
 3. I applied either a **Random Forest Regressor** (with 2000 trees) or a **Gradient Boosting Regressor** (with n_estimators = 4000 and learning_rate = 0.02) to rank the remaining features. Some of my models used the RF method and some the GB method.
 
-4. The exact number of features used in the model was determined with CV. My best single model used the top 72 features (ranked with Random Forest Regressor).
+4. The exact number of features used in the model was determined with CV. My best single model used the top **72 features** (ranked with Random Forest Regressor).
 
 One interesting observation is that models that used the GB method for feature ranking achieved the lowest CV error with only about 40 features while models that used the RF method needed at least 60-80 features for best CV score. It should be probably expected that using the same method both for feature selection and modeling is a better option than using different methods.
+
+### **Machine learning Model**
+
+My best single model used the **XGBoost** library and a **bagging** metaestimator and achieved a score of 0.2124 in the private leaderboard. The parameters of the model are: num_round = 9000, eta = 0.01, max_depth = 12, min_child_weight = 18, subsample = 0.7, colsample_bytree = 0.65. The bagging metaestimator was applied by running the XGBoost model 20 times using a different sample (with replacement) of the training  data each time and different seed. Finally the average of the 20 bagged models was taken. 
+
+The parameters of the XGBoost model were tuned with a **5-fold Cross-Validation**. It should be mentioned that in order to implement CV properly, tube assemblies with the same ID should be all assigned to the same CV fold. Otherwise, the CV error is underestimated and it's not consistent with the public and private leaderboards.  
+
+The final model was an **ensemble of 5 single XGBoost models** weighted with weights ranging from about 0.05 to 0.45 These models may have differences in the pre-processing of the data, the feature engineering part, the feature selection method, the exact number of features that were used by the model, and the parameters of the XGBoost model. Although the ensemble model achieved a better score in the public leaderboard than any of the single models, the best single model had a better score than the ensemble model in the private leaderboard. The ensemble model may have overfitted the public leaderboard to some extent. In addition, one of the reasons that the ensemble model did not perform significantly better than the single models is because all the single models were developed using the same algorithm and there was not enough diversity in these models. A better ensembling method is required to significantly improve the performance of the best single model.
+
