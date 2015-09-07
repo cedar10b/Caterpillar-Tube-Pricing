@@ -22,9 +22,9 @@ Last, I transformed the response variable (i.e. the price of the tube assemblies
 
 I created the following features:
 
-From the quote_date: **year**, **month**, **week**, **day**, **day of year**, **day of week**
+From quote_date: **year**, **month**, **week**, **day**, **day of year**, **day of week**
 
-From the specs: **total number of specs in a tube**, and **total_specs_score**. The total_specs_score is the sum of all individual specs labels (encoded as numbers) in a tube. The labels are carefully chosen to avoid collisions (e.g. tubes with N specs will always have higher total_specs_score than tubes with N-1 specs).  
+From specs: **total number of specs in a tube**, and **total_specs_score**. The total_specs_score is the sum of all individual specs labels (encoded as numbers) in a tube. The labels are carefully chosen to avoid collisions (e.g. tubes with N specs will always have higher total_specs_score than tubes with N-1 specs).  
 
 From Bill_of_materials: **total number of all components in a tube**, **total number of components for each component type**, **and total_comp_score** (defined similarly to total_specs_score but here the sum is weighted with the number of times that each component is used in the tube). 
 
