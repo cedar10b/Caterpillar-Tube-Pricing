@@ -8,7 +8,7 @@ The goal of this project is to develop a machine learning model and **predict th
 
 The dataset is comprised of 21 relational tables. The ER diagram below (posted by EaswerC in the Kaggle forum) shows how these tables are associated to each other. Each tube assembly may have one or more components, and there are 11 different types of components each one having its own features. Combining these tables together into a single dataframe and generating new features from the existing ones is one of the challenges of the competition.
 
- ![](https://kaggle2.blob.core.windows.net/forum-message-attachments/83029/2665/CAT_ER.png?sv=2012-02-12&se=2015-09-09T20%3A22%3A23Z&sr=b&sp=r&sig=cz1jf4%2Fv93MSxLEANFN9pYKdhyg%2FaV9O8%2BPk%2BPpIAOo%3D)
+ ![](https://kaggle2.blob.core.windows.net/forum-message-attachments/83029/2665/CAT_ER.png?sv=2012-02-12&se=2015-09-18T23%3A27%3A14Z&sr=b&sp=r&sig=L5%2FiMrM25%2Fhe9Cn2%2FIDEeYglzM5a%2FgroIxYbFcS2%2Bmg%3D)
 
 There is a large number of features that either have missing values or need cleaning. For numerical features, missing or corrupted values were replaced with the **median value**, and for categorical features, missing or corrupted values were replaced with the **most frequent value**.
 
